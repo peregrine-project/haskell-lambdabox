@@ -27,8 +27,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        cabal: [4.14.2]
-        ghc: [5.3.0]
+        cabal: [3.12.1]
+        ghc: [9.10.1]
     steps:
       - name: Checkout branch ${{ github.ref_name }}
         uses: actions/checkout@v6
