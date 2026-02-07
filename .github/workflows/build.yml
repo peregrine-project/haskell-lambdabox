@@ -1,0 +1,70 @@
+name: Build
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - 'main'
+    paths-ignore:
+    - '**.md'
+    - 'LICENSE'
+  pull_request:
+    paths-ignore:
+    - '**.md'
+    - 'LICENSE'
+concurrency:
+  group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.head_ref || github.ref }}"
+  cancel-in-progress: true
+permissions:
+  contents: read
+env:
+  JOBS: 4
+  TMPDIR: /tmp
+jobs:
+  build:
+    name: Build (GHC ${{ matrix.ghc }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        cabal: [4.14.2]
+        ghc: [5.3.0]
+    steps:
+      - name: Checkout branch ${{ github.ref_name }}
+        uses: actions/checkout@v6
+
+      - name: Set up GHC
+        uses: haskell-actions/setup@v2
+        id: setup
+        with:
+          ghc-version: ${{ matrix.ghc }}
+          cabal-version: ${{ matrix.cabal }}
+
+      - name: Configure the build
+        run: |
+          cabal configure --disable-documentation
+          cabal build all --dry-run
+
+      - name: Restore cached Haskell dependencies
+        uses: actions/cache/restore@v5
+        id: cache
+        env:
+          key: ${{ runner.os }}-${{ matrix.ghc }}-${{ matrix.cabal }}
+        with:
+          path: ${{ steps.setup.outputs.cabal-store }}
+          key:  ${{ env.key }}-plan-${{ hashFiles('**/plan.json') }}
+          restore-keys: ${{ env.key }}-
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: cabal build all --only-dependencies
+
+      - name: Save cached dependencies
+        uses: actions/cache/save@v4
+        if: steps.cache.outputs.cache-hit != 'true'
+        with:
+          path: ${{ steps.setup.outputs.cabal-store }}
+          key:  ${{ steps.cache.outputs.cache-primary-key }}
+
+      - name: Build
+        run: make build
