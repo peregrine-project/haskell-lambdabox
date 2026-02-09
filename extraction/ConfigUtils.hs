@@ -164,40 +164,60 @@ data Coq_backend_config' =
  | Wasm' Coq_wasm_config'
  | OCaml' Coq_ocaml_config'
 
-data Coq_erasure_config' =
-   Build_erasure_config' (Prelude.Maybe Config0.Coq_erasure_phases) (Prelude.Maybe
+data Coq_erasure_phases' =
+   Build_erasure_phases' (Prelude.Maybe Prelude.Bool) (Prelude.Maybe
+                                                      Prelude.Bool) (Prelude.Maybe
                                                                     Prelude.Bool) 
+ (Prelude.Maybe Prelude.Bool) (Prelude.Maybe Prelude.Bool) (Prelude.Maybe
+                                                           Prelude.Bool) 
  (Prelude.Maybe Prelude.Bool)
 
-phases' :: Coq_erasure_config' -> Prelude.Maybe Config0.Coq_erasure_phases
-phases' e =
+implement_box' :: Coq_erasure_phases' -> Prelude.Maybe Prelude.Bool
+implement_box' e =
   case e of {
-   Build_erasure_config' phases'0 _ _ -> phases'0}
+   Build_erasure_phases' implement_box'0 _ _ _ _ _ _ -> implement_box'0}
 
-dearging_do_trim_const_masks' :: Coq_erasure_config' -> Prelude.Maybe
-                                 Prelude.Bool
-dearging_do_trim_const_masks' e =
+implement_lazy' :: Coq_erasure_phases' -> Prelude.Maybe Prelude.Bool
+implement_lazy' e =
   case e of {
-   Build_erasure_config' _ dearging_do_trim_const_masks'0 _ ->
-    dearging_do_trim_const_masks'0}
+   Build_erasure_phases' _ implement_lazy'0 _ _ _ _ _ -> implement_lazy'0}
 
-dearging_do_trim_ctor_masks' :: Coq_erasure_config' -> Prelude.Maybe
-                                Prelude.Bool
-dearging_do_trim_ctor_masks' e =
+cofix_to_laxy' :: Coq_erasure_phases' -> Prelude.Maybe Prelude.Bool
+cofix_to_laxy' e =
   case e of {
-   Build_erasure_config' _ _ dearging_do_trim_ctor_masks'0 ->
-    dearging_do_trim_ctor_masks'0}
+   Build_erasure_phases' _ _ cofix_to_laxy'0 _ _ _ _ -> cofix_to_laxy'0}
+
+betared' :: Coq_erasure_phases' -> Prelude.Maybe Prelude.Bool
+betared' e =
+  case e of {
+   Build_erasure_phases' _ _ _ betared'0 _ _ _ -> betared'0}
+
+unboxing' :: Coq_erasure_phases' -> Prelude.Maybe Prelude.Bool
+unboxing' e =
+  case e of {
+   Build_erasure_phases' _ _ _ _ unboxing'0 _ _ -> unboxing'0}
+
+dearg_ctors' :: Coq_erasure_phases' -> Prelude.Maybe Prelude.Bool
+dearg_ctors' e =
+  case e of {
+   Build_erasure_phases' _ _ _ _ _ dearg_ctors'0 _ -> dearg_ctors'0}
+
+dearg_consts' :: Coq_erasure_phases' -> Prelude.Maybe Prelude.Bool
+dearg_consts' e =
+  case e of {
+   Build_erasure_phases' _ _ _ _ _ _ dearg_consts'0 -> dearg_consts'0}
 
 data Coq_config' =
-   Build_config' Coq_backend_config' Coq_erasure_config' Config0.Coq_inlinings 
- Config0.Coq_remappings EProgram.Coq_inductives_mapping Config0.Coq_custom_attributes
+   Build_config' Coq_backend_config' (Prelude.Maybe Coq_erasure_phases') 
+ Config0.Coq_inlinings Config0.Coq_remappings EProgram.Coq_inductives_mapping 
+ Config0.Coq_custom_attributes
 
 backend_opts' :: Coq_config' -> Coq_backend_config'
 backend_opts' c =
   case c of {
    Build_config' backend_opts'0 _ _ _ _ _ -> backend_opts'0}
 
-erasure_opts' :: Coq_config' -> Coq_erasure_config'
+erasure_opts' :: Coq_config' -> Prelude.Maybe Coq_erasure_phases'
 erasure_opts' c =
   case c of {
    Build_config' _ erasure_opts'0 _ _ _ _ -> erasure_opts'0}

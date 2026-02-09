@@ -89,27 +89,30 @@ type Inlinings = [LambdaBox.LambdaBox.KerName]
 type CustomAttributes = [(LambdaBox.LambdaBox.KerName, String)]
 
 -- Configure optional compilation phases
-data Phases = Phases
-  { implementBox  :: Bool,
-    implementLaxy :: Bool,
-    cofixToLazy   :: Bool,
-    betared       :: Bool,
-    unboxing      :: Bool
-  }
-
--- Erasure config
-data ErasureConfig = ErasureConfig
-  { phases      :: Maybe Phases,
-    deargConst  :: Maybe Bool,
-    deargCtor   :: Maybe Bool
+data ErasurePhases = ErasurePhases
+  { implementBox  :: Maybe Bool,
+    implementLaxy :: Maybe Bool,
+    cofixToLazy   :: Maybe Bool,
+    betared       :: Maybe Bool,
+    unboxing      :: Maybe Bool,
+    deargCtor     :: Maybe Bool,
+    deargConst    :: Maybe Bool
   }
 
 -- Configuration of Peregrine
 data Config = Config
   { backendOpts       :: BackendConfig,
-    erasureOpts       :: ErasureConfig,
+    erasureOpts       :: Maybe ErasurePhases,
     inlinings         :: Inlinings,
     remappings        :: Remappings,
     cstrReorders      :: InductivesMapping,
     customAttributes  :: CustomAttributes
+  }
+
+-- Attributes configuration
+data AttributesConfig = AttributesConfig
+  { inlinings'         :: Inlinings,
+    remappings'        :: Remappings,
+    cstrReorders'      :: InductivesMapping,
+    customAttributes'  :: CustomAttributes
   }

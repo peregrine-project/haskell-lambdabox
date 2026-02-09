@@ -2,6 +2,7 @@ module Config0 where
 
 import qualified Prelude
 import qualified Datatypes
+import qualified EProgram
 import qualified Kernames
 import qualified Bytestring
 
@@ -45,32 +46,28 @@ type Coq_remappings = ([]) Coq_remapping
 
 type Coq_custom_attributes = ([]) Coq_custom_attribute
 
-data Coq_erasure_phases =
-   Build_erasure_phases Prelude.Bool Prelude.Bool Prelude.Bool Prelude.Bool 
- Prelude.Bool
+data Coq_attributes_config =
+   Build_attributes_config Coq_inlinings Coq_remappings EProgram.Coq_inductives_mapping 
+ Coq_custom_attributes
 
-implement_box :: Coq_erasure_phases -> Prelude.Bool
-implement_box e =
-  case e of {
-   Build_erasure_phases implement_box0 _ _ _ _ -> implement_box0}
+inlinings_opt :: Coq_attributes_config -> Coq_inlinings
+inlinings_opt a =
+  case a of {
+   Build_attributes_config inlinings_opt0 _ _ _ -> inlinings_opt0}
 
-implement_lazy :: Coq_erasure_phases -> Prelude.Bool
-implement_lazy e =
-  case e of {
-   Build_erasure_phases _ implement_lazy0 _ _ _ -> implement_lazy0}
+remappings_opt :: Coq_attributes_config -> Coq_remappings
+remappings_opt a =
+  case a of {
+   Build_attributes_config _ remappings_opt0 _ _ -> remappings_opt0}
 
-cofix_to_laxy :: Coq_erasure_phases -> Prelude.Bool
-cofix_to_laxy e =
-  case e of {
-   Build_erasure_phases _ _ cofix_to_laxy0 _ _ -> cofix_to_laxy0}
+cstr_reorders_opt :: Coq_attributes_config -> EProgram.Coq_inductives_mapping
+cstr_reorders_opt a =
+  case a of {
+   Build_attributes_config _ _ cstr_reorders_opt0 _ -> cstr_reorders_opt0}
 
-betared :: Coq_erasure_phases -> Prelude.Bool
-betared e =
-  case e of {
-   Build_erasure_phases _ _ _ betared0 _ -> betared0}
-
-unboxing :: Coq_erasure_phases -> Prelude.Bool
-unboxing e =
-  case e of {
-   Build_erasure_phases _ _ _ _ unboxing0 -> unboxing0}
+custom_attributes_opt :: Coq_attributes_config -> Coq_custom_attributes
+custom_attributes_opt a =
+  case a of {
+   Build_attributes_config _ _ _ custom_attributes_opt0 ->
+    custom_attributes_opt0}
 

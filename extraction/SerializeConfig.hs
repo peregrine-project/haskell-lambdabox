@@ -344,9 +344,9 @@ coq_Serialize_custom_attributes o =
   CeresSerialize.to_sexp
     (CeresSerialize.coq_Serialize_list coq_Serialize_custom_attribute) o
 
-coq_Serialize_erasure_phases :: CeresSerialize.Serialize
-                                Config0.Coq_erasure_phases
-coq_Serialize_erasure_phases o =
+coq_Serialize_erasure_phases' :: CeresSerialize.Serialize
+                                 ConfigUtils.Coq_erasure_phases'
+coq_Serialize_erasure_phases' o =
   CeresS.List ((:) (CeresS.Atom_ (CeresS.Raw (Bytestring.String__String 'e'
     (Bytestring.String__String 'r' (Bytestring.String__String 'a'
     (Bytestring.String__String 's' (Bytestring.String__String 'u'
@@ -356,46 +356,34 @@ coq_Serialize_erasure_phases o =
     (Bytestring.String__String 's' (Bytestring.String__String 'e'
     (Bytestring.String__String 's'
     Bytestring.String__EmptyString)))))))))))))))) ((:)
-    (CeresSerialize.to_sexp CeresSerialize.coq_Serialize_bool
-      (Config0.implement_box o))
-    ((:)
-    (CeresSerialize.to_sexp CeresSerialize.coq_Serialize_bool
-      (Config0.implement_lazy o))
-    ((:)
-    (CeresSerialize.to_sexp CeresSerialize.coq_Serialize_bool
-      (Config0.cofix_to_laxy o))
-    ((:)
-    (CeresSerialize.to_sexp CeresSerialize.coq_Serialize_bool
-      (Config0.betared o))
-    ((:)
-    (CeresSerialize.to_sexp CeresSerialize.coq_Serialize_bool
-      (Config0.unboxing o))
-    ([])))))))
-
-coq_Serialize_erasure_config' :: CeresSerialize.Serialize
-                                 ConfigUtils.Coq_erasure_config'
-coq_Serialize_erasure_config' o =
-  CeresS.List ((:) (CeresS.Atom_ (CeresS.Raw (Bytestring.String__String 'e'
-    (Bytestring.String__String 'r' (Bytestring.String__String 'a'
-    (Bytestring.String__String 's' (Bytestring.String__String 'u'
-    (Bytestring.String__String 'r' (Bytestring.String__String 'e'
-    (Bytestring.String__String '_' (Bytestring.String__String 'c'
-    (Bytestring.String__String 'o' (Bytestring.String__String 'n'
-    (Bytestring.String__String 'f' (Bytestring.String__String 'i'
-    (Bytestring.String__String 'g'
-    Bytestring.String__EmptyString)))))))))))))))) ((:)
     (CeresSerialize.to_sexp
-      (CeresSerialize.coq_Serialize_option coq_Serialize_erasure_phases)
-      (ConfigUtils.phases' o))
+      (CeresSerialize.coq_Serialize_option CeresSerialize.coq_Serialize_bool)
+      (ConfigUtils.implement_box' o))
     ((:)
     (CeresSerialize.to_sexp
       (CeresSerialize.coq_Serialize_option CeresSerialize.coq_Serialize_bool)
-      (ConfigUtils.dearging_do_trim_const_masks' o))
+      (ConfigUtils.implement_lazy' o))
     ((:)
     (CeresSerialize.to_sexp
       (CeresSerialize.coq_Serialize_option CeresSerialize.coq_Serialize_bool)
-      (ConfigUtils.dearging_do_trim_ctor_masks' o))
-    ([])))))
+      (ConfigUtils.cofix_to_laxy' o))
+    ((:)
+    (CeresSerialize.to_sexp
+      (CeresSerialize.coq_Serialize_option CeresSerialize.coq_Serialize_bool)
+      (ConfigUtils.betared' o))
+    ((:)
+    (CeresSerialize.to_sexp
+      (CeresSerialize.coq_Serialize_option CeresSerialize.coq_Serialize_bool)
+      (ConfigUtils.unboxing' o))
+    ((:)
+    (CeresSerialize.to_sexp
+      (CeresSerialize.coq_Serialize_option CeresSerialize.coq_Serialize_bool)
+      (ConfigUtils.dearg_ctors' o))
+    ((:)
+    (CeresSerialize.to_sexp
+      (CeresSerialize.coq_Serialize_option CeresSerialize.coq_Serialize_bool)
+      (ConfigUtils.dearg_consts' o))
+    ([])))))))))
 
 coq_Serialize_config' :: CeresSerialize.Serialize ConfigUtils.Coq_config'
 coq_Serialize_config' o =
@@ -407,7 +395,8 @@ coq_Serialize_config' o =
     (CeresSerialize.to_sexp coq_Serialize_backend_config'
       (ConfigUtils.backend_opts' o))
     ((:)
-    (CeresSerialize.to_sexp coq_Serialize_erasure_config'
+    (CeresSerialize.to_sexp
+      (CeresSerialize.coq_Serialize_option coq_Serialize_erasure_phases')
       (ConfigUtils.erasure_opts' o))
     ((:)
     (CeresSerialize.to_sexp coq_Serialize_inlinings
@@ -424,7 +413,49 @@ coq_Serialize_config' o =
       (ConfigUtils.custom_attributes_opts' o))
     ([]))))))))
 
+coq_Serialize_attributes_config :: CeresSerialize.Serialize
+                                   Config0.Coq_attributes_config
+coq_Serialize_attributes_config o =
+  CeresS.List ((:) (CeresS.Atom_ (CeresS.Raw (Bytestring.String__String 'a'
+    (Bytestring.String__String 't' (Bytestring.String__String 't'
+    (Bytestring.String__String 'r' (Bytestring.String__String 'i'
+    (Bytestring.String__String 'b' (Bytestring.String__String 'u'
+    (Bytestring.String__String 't' (Bytestring.String__String 'e'
+    (Bytestring.String__String 's' (Bytestring.String__String '_'
+    (Bytestring.String__String 'c' (Bytestring.String__String 'o'
+    (Bytestring.String__String 'n' (Bytestring.String__String 'f'
+    (Bytestring.String__String 'i' (Bytestring.String__String 'g'
+    Bytestring.String__EmptyString))))))))))))))))))) ((:)
+    (CeresSerialize.to_sexp coq_Serialize_inlinings
+      (Config0.inlinings_opt o))
+    ((:)
+    (CeresSerialize.to_sexp coq_Serialize_remappings
+      (Config0.remappings_opt o))
+    ((:)
+    (CeresSerialize.to_sexp
+      (CeresSerialize.coq_Serialize_list coq_Serialize_inductive_mapping)
+      (Config0.cstr_reorders_opt o))
+    ((:)
+    (CeresSerialize.to_sexp coq_Serialize_custom_attributes
+      (Config0.custom_attributes_opt o))
+    ([]))))))
+
+string_of_backend_config' :: ConfigUtils.Coq_backend_config' ->
+                             Bytestring.String__Coq_t
+string_of_backend_config' x =
+  CeresSerialize.to_string coq_Serialize_backend_config' x
+
+string_of_erasure_phases' :: ConfigUtils.Coq_erasure_phases' ->
+                             Bytestring.String__Coq_t
+string_of_erasure_phases' x =
+  CeresSerialize.to_string coq_Serialize_erasure_phases' x
+
 string_of_config' :: ConfigUtils.Coq_config' -> Bytestring.String__Coq_t
 string_of_config' x =
   CeresSerialize.to_string coq_Serialize_config' x
+
+string_of_attributes_config :: Config0.Coq_attributes_config ->
+                               Bytestring.String__Coq_t
+string_of_attributes_config x =
+  CeresSerialize.to_string coq_Serialize_attributes_config x
 
