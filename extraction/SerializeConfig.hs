@@ -176,6 +176,11 @@ coq_Serialize_ocaml_config' o =
       (ConfigUtils.program_type' o))
     ([])))
 
+coq_Serialize_cakeml_config' :: CeresSerialize.Serialize
+                                ConfigUtils.Coq_cakeml_config'
+coq_Serialize_cakeml_config' o =
+  CeresSerialize.to_sexp CeresSerialize.coq_Serialize_unit o
+
 coq_Serialize_backend_config' :: CeresSerialize.Serialize
                                  ConfigUtils.Coq_backend_config'
 coq_Serialize_backend_config' b =
@@ -201,7 +206,13 @@ coq_Serialize_backend_config' b =
     (Bytestring.String__String 'O' (Bytestring.String__String 'C'
     (Bytestring.String__String 'a' (Bytestring.String__String 'm'
     (Bytestring.String__String 'l' Bytestring.String__EmptyString))))))) ((:)
-    (CeresSerialize.to_sexp coq_Serialize_ocaml_config' o) ([])))}
+    (CeresSerialize.to_sexp coq_Serialize_ocaml_config' o) ([])));
+   ConfigUtils.CakeML' o -> CeresS.List ((:) (CeresS.Atom_ (CeresS.Raw
+    (Bytestring.String__String 'C' (Bytestring.String__String 'a'
+    (Bytestring.String__String 'k' (Bytestring.String__String 'e'
+    (Bytestring.String__String 'M' (Bytestring.String__String 'L'
+    Bytestring.String__EmptyString)))))))) ((:)
+    (CeresSerialize.to_sexp coq_Serialize_cakeml_config' o) ([])))}
 
 coq_Serialize_remapped_inductive :: CeresSerialize.Serialize
                                     Config0.Coq_remapped_inductive

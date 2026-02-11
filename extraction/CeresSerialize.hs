@@ -55,6 +55,11 @@ coq_Serialize_product h h0 ab =
   CeresS.List ((:) (to_sexp h (Datatypes.fst ab)) ((:)
     (to_sexp h0 (Datatypes.snd ab)) ([])))
 
+coq_Serialize_unit :: Serialize ()
+coq_Serialize_unit _ =
+  CeresS.Atom_ (CeresS.Raw (Bytestring.String__String 't'
+    (Bytestring.String__String 't' Bytestring.String__EmptyString)))
+
 coq_Serialize_list :: (Serialize a1) -> Serialize (([]) a1)
 coq_Serialize_list h xs =
   CeresS.List (ListDef.map (to_sexp h) xs)

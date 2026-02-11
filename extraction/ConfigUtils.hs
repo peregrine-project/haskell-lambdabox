@@ -157,12 +157,15 @@ program_type' :: Coq_ocaml_config' -> Prelude.Maybe
 program_type' o =
   o
 
+type Coq_cakeml_config' = ()
+
 data Coq_backend_config' =
    Rust' Coq_rust_config'
  | Elm' Coq_elm_config'
  | C' Coq_c_config'
  | Wasm' Coq_wasm_config'
  | OCaml' Coq_ocaml_config'
+ | CakeML' Coq_cakeml_config'
 
 data Coq_erasure_phases' =
    Build_erasure_phases' (Prelude.Maybe Prelude.Bool) (Prelude.Maybe
