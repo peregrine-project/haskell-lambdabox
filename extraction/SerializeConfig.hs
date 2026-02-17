@@ -6,6 +6,7 @@ import qualified CeresSerialize
 import qualified Config0
 import qualified ConfigUtils
 import qualified EProgram
+import qualified ERemapInductives
 import qualified Serialize
 import qualified SerializeCommon
 import qualified Bytestring
@@ -240,12 +241,37 @@ coq_Serialize_remapped_inductive o =
       (Config0.re_ind_match o))
     ([])))))
 
-coq_Serialize_external_remapping :: CeresSerialize.Serialize
-                                    Config0.Coq_external_remapping
-coq_Serialize_external_remapping r =
-  CeresSerialize.to_sexp
-    (CeresSerialize.coq_Serialize_option SerializeCommon.coq_Serialize_ident)
-    r
+coq_Serialize_remapped_constant :: CeresSerialize.Serialize
+                                   Config0.Coq_remapped_constant
+coq_Serialize_remapped_constant o =
+  CeresS.List ((:) (CeresS.Atom_ (CeresS.Raw (Bytestring.String__String 'r'
+    (Bytestring.String__String 'e' (Bytestring.String__String 'm'
+    (Bytestring.String__String 'a' (Bytestring.String__String 'p'
+    (Bytestring.String__String 'p' (Bytestring.String__String 'e'
+    (Bytestring.String__String 'd' (Bytestring.String__String '_'
+    (Bytestring.String__String 'c' (Bytestring.String__String 'o'
+    (Bytestring.String__String 'n' (Bytestring.String__String 's'
+    (Bytestring.String__String 't' (Bytestring.String__String 'a'
+    (Bytestring.String__String 'n' (Bytestring.String__String 't'
+    Bytestring.String__EmptyString))))))))))))))))))) ((:)
+    (CeresSerialize.to_sexp
+      (CeresSerialize.coq_Serialize_option
+        SerializeCommon.coq_Serialize_ident)
+      (Config0.re_const_ext o))
+    ((:)
+    (CeresSerialize.to_sexp
+      (CeresSerialize.coq_Serialize_Integral CeresSerialize.coq_Integral_nat)
+      (Config0.re_const_arity o))
+    ((:)
+    (CeresSerialize.to_sexp CeresSerialize.coq_Serialize_bool
+      (Config0.re_const_gc o))
+    ((:)
+    (CeresSerialize.to_sexp CeresSerialize.coq_Serialize_bool
+      (Config0.re_const_inl o))
+    ((:)
+    (CeresSerialize.to_sexp SerializeCommon.coq_Serialize_ident
+      (Config0.re_const_s o))
+    ([])))))))
 
 coq_Serialize_inductive_mapping :: CeresSerialize.Serialize
                                    EProgram.Coq_inductive_mapping
@@ -274,60 +300,50 @@ coq_Serialize_inductive_mapping r =
         n)
       ([])))))}}
 
-coq_Serialize_remapping :: CeresSerialize.Serialize Config0.Coq_remapping
-coq_Serialize_remapping r =
-  case r of {
-   Config0.RemapInductive kn er ri -> CeresS.List ((:) (CeresS.Atom_
-    (CeresS.Raw (Bytestring.String__String 'R' (Bytestring.String__String 'e'
-    (Bytestring.String__String 'm' (Bytestring.String__String 'a'
-    (Bytestring.String__String 'p' (Bytestring.String__String 'I'
+coq_Serialize_extract_inductive :: CeresSerialize.Serialize
+                                   ERemapInductives.Coq_extract_inductive
+coq_Serialize_extract_inductive r =
+  CeresS.List ((:) (CeresS.Atom_ (CeresS.Raw (Bytestring.String__String 'e'
+    (Bytestring.String__String 'x' (Bytestring.String__String 't'
+    (Bytestring.String__String 'r' (Bytestring.String__String 'a'
+    (Bytestring.String__String 'c' (Bytestring.String__String 't'
+    (Bytestring.String__String '_' (Bytestring.String__String 'i'
     (Bytestring.String__String 'n' (Bytestring.String__String 'd'
     (Bytestring.String__String 'u' (Bytestring.String__String 'c'
     (Bytestring.String__String 't' (Bytestring.String__String 'i'
     (Bytestring.String__String 'v' (Bytestring.String__String 'e'
+    Bytestring.String__EmptyString))))))))))))))))))) ((:)
+    (CeresSerialize.to_sexp
+      (CeresSerialize.coq_Serialize_list
+        SerializeCommon.coq_Serialize_kername)
+      (ERemapInductives.cstrs r))
+    ((:)
+    (CeresSerialize.to_sexp SerializeCommon.coq_Serialize_kername
+      (ERemapInductives.elim r))
+    ([]))))
+
+coq_Serialize_remap_inductive :: CeresSerialize.Serialize
+                                 Config0.Coq_remap_inductive
+coq_Serialize_remap_inductive r =
+  case r of {
+   Config0.KnIndRemap r0 -> CeresS.List ((:) (CeresS.Atom_ (CeresS.Raw
+    (Bytestring.String__String 'K' (Bytestring.String__String 'n'
+    (Bytestring.String__String 'I' (Bytestring.String__String 'n'
+    (Bytestring.String__String 'd' (Bytestring.String__String 'R'
+    (Bytestring.String__String 'e' (Bytestring.String__String 'm'
+    (Bytestring.String__String 'a' (Bytestring.String__String 'p'
+    Bytestring.String__EmptyString)))))))))))) ((:)
+    (CeresSerialize.to_sexp coq_Serialize_extract_inductive r0) ([])));
+   Config0.StringIndRemap r0 -> CeresS.List ((:) (CeresS.Atom_ (CeresS.Raw
+    (Bytestring.String__String 'S' (Bytestring.String__String 't'
+    (Bytestring.String__String 'r' (Bytestring.String__String 'i'
+    (Bytestring.String__String 'n' (Bytestring.String__String 'g'
+    (Bytestring.String__String 'I' (Bytestring.String__String 'n'
+    (Bytestring.String__String 'd' (Bytestring.String__String 'R'
+    (Bytestring.String__String 'e' (Bytestring.String__String 'm'
+    (Bytestring.String__String 'a' (Bytestring.String__String 'p'
     Bytestring.String__EmptyString)))))))))))))))) ((:)
-    (CeresSerialize.to_sexp SerializeCommon.coq_Serialize_inductive kn) ((:)
-    (CeresSerialize.to_sexp coq_Serialize_external_remapping er) ((:)
-    (CeresSerialize.to_sexp coq_Serialize_remapped_inductive ri) ([])))));
-   Config0.RemapConstant kn er a gc s -> CeresS.List ((:) (CeresS.Atom_
-    (CeresS.Raw (Bytestring.String__String 'R' (Bytestring.String__String 'e'
-    (Bytestring.String__String 'm' (Bytestring.String__String 'a'
-    (Bytestring.String__String 'p' (Bytestring.String__String 'C'
-    (Bytestring.String__String 'o' (Bytestring.String__String 'n'
-    (Bytestring.String__String 's' (Bytestring.String__String 't'
-    (Bytestring.String__String 'a' (Bytestring.String__String 'n'
-    (Bytestring.String__String 't'
-    Bytestring.String__EmptyString))))))))))))))) ((:)
-    (CeresSerialize.to_sexp SerializeCommon.coq_Serialize_kername kn) ((:)
-    (CeresSerialize.to_sexp coq_Serialize_external_remapping er) ((:)
-    (CeresSerialize.to_sexp
-      (CeresSerialize.coq_Serialize_option
-        (CeresSerialize.coq_Serialize_Integral
-          CeresSerialize.coq_Integral_nat))
-      a)
-    ((:) (CeresSerialize.to_sexp CeresSerialize.coq_Serialize_bool gc) ((:)
-    (CeresSerialize.to_sexp SerializeCommon.coq_Serialize_ident s) ([])))))));
-   Config0.RemapInlineConstant kn er a gc s -> CeresS.List ((:) (CeresS.Atom_
-    (CeresS.Raw (Bytestring.String__String 'R' (Bytestring.String__String 'e'
-    (Bytestring.String__String 'm' (Bytestring.String__String 'a'
-    (Bytestring.String__String 'p' (Bytestring.String__String 'I'
-    (Bytestring.String__String 'n' (Bytestring.String__String 'l'
-    (Bytestring.String__String 'i' (Bytestring.String__String 'n'
-    (Bytestring.String__String 'e' (Bytestring.String__String 'C'
-    (Bytestring.String__String 'o' (Bytestring.String__String 'n'
-    (Bytestring.String__String 's' (Bytestring.String__String 't'
-    (Bytestring.String__String 'a' (Bytestring.String__String 'n'
-    (Bytestring.String__String 't'
-    Bytestring.String__EmptyString))))))))))))))))))))) ((:)
-    (CeresSerialize.to_sexp SerializeCommon.coq_Serialize_kername kn) ((:)
-    (CeresSerialize.to_sexp coq_Serialize_external_remapping er) ((:)
-    (CeresSerialize.to_sexp
-      (CeresSerialize.coq_Serialize_option
-        (CeresSerialize.coq_Serialize_Integral
-          CeresSerialize.coq_Integral_nat))
-      a)
-    ((:) (CeresSerialize.to_sexp CeresSerialize.coq_Serialize_bool gc) ((:)
-    (CeresSerialize.to_sexp SerializeCommon.coq_Serialize_ident s) ([])))))))}
+    (CeresSerialize.to_sexp coq_Serialize_remapped_inductive r0) ([])))}
 
 coq_Serialize_custom_attribute :: CeresSerialize.Serialize
                                   Config0.Coq_custom_attribute
@@ -344,10 +360,25 @@ coq_Serialize_inlinings o =
     (CeresSerialize.coq_Serialize_list SerializeCommon.coq_Serialize_kername)
     o
 
-coq_Serialize_remappings :: CeresSerialize.Serialize Config0.Coq_remappings
-coq_Serialize_remappings o =
+coq_Serialize_constant_remappings :: CeresSerialize.Serialize
+                                     Config0.Coq_constant_remappings
+coq_Serialize_constant_remappings o =
   CeresSerialize.to_sexp
-    (CeresSerialize.coq_Serialize_list coq_Serialize_remapping) o
+    (CeresSerialize.coq_Serialize_list
+      (CeresSerialize.coq_Serialize_product
+        SerializeCommon.coq_Serialize_kername
+        coq_Serialize_remapped_constant))
+    o
+
+coq_Serialize_inductive_remappings :: CeresSerialize.Serialize
+                                      Config0.Coq_inductive_remappings
+coq_Serialize_inductive_remappings o =
+  CeresSerialize.to_sexp
+    (CeresSerialize.coq_Serialize_list
+      (CeresSerialize.coq_Serialize_product
+        SerializeCommon.coq_Serialize_inductive
+        coq_Serialize_remap_inductive))
+    o
 
 coq_Serialize_custom_attributes :: CeresSerialize.Serialize
                                    Config0.Coq_custom_attributes
@@ -413,8 +444,11 @@ coq_Serialize_config' o =
     (CeresSerialize.to_sexp coq_Serialize_inlinings
       (ConfigUtils.inlinings_opts' o))
     ((:)
-    (CeresSerialize.to_sexp coq_Serialize_remappings
-      (ConfigUtils.remappings_opts' o))
+    (CeresSerialize.to_sexp coq_Serialize_constant_remappings
+      (ConfigUtils.const_remappings_opts' o))
+    ((:)
+    (CeresSerialize.to_sexp coq_Serialize_inductive_remappings
+      (ConfigUtils.ind_remappings_opts' o))
     ((:)
     (CeresSerialize.to_sexp
       (CeresSerialize.coq_Serialize_list coq_Serialize_inductive_mapping)
@@ -422,7 +456,7 @@ coq_Serialize_config' o =
     ((:)
     (CeresSerialize.to_sexp coq_Serialize_custom_attributes
       (ConfigUtils.custom_attributes_opts' o))
-    ([]))))))))
+    ([])))))))))
 
 coq_Serialize_attributes_config :: CeresSerialize.Serialize
                                    Config0.Coq_attributes_config
@@ -440,8 +474,11 @@ coq_Serialize_attributes_config o =
     (CeresSerialize.to_sexp coq_Serialize_inlinings
       (Config0.inlinings_opt o))
     ((:)
-    (CeresSerialize.to_sexp coq_Serialize_remappings
-      (Config0.remappings_opt o))
+    (CeresSerialize.to_sexp coq_Serialize_constant_remappings
+      (Config0.const_remappings_opt o))
+    ((:)
+    (CeresSerialize.to_sexp coq_Serialize_inductive_remappings
+      (Config0.ind_remappings_opt o))
     ((:)
     (CeresSerialize.to_sexp
       (CeresSerialize.coq_Serialize_list coq_Serialize_inductive_mapping)
@@ -449,7 +486,7 @@ coq_Serialize_attributes_config o =
     ((:)
     (CeresSerialize.to_sexp coq_Serialize_custom_attributes
       (Config0.custom_attributes_opt o))
-    ([]))))))
+    ([])))))))
 
 string_of_backend_config' :: ConfigUtils.Coq_backend_config' ->
                              Bytestring.String__Coq_t

@@ -212,37 +212,43 @@ dearg_consts' e =
 
 data Coq_config' =
    Build_config' Coq_backend_config' (Prelude.Maybe Coq_erasure_phases') 
- Config0.Coq_inlinings Config0.Coq_remappings EProgram.Coq_inductives_mapping 
- Config0.Coq_custom_attributes
+ Config0.Coq_inlinings Config0.Coq_constant_remappings Config0.Coq_inductive_remappings 
+ EProgram.Coq_inductives_mapping Config0.Coq_custom_attributes
 
 backend_opts' :: Coq_config' -> Coq_backend_config'
 backend_opts' c =
   case c of {
-   Build_config' backend_opts'0 _ _ _ _ _ -> backend_opts'0}
+   Build_config' backend_opts'0 _ _ _ _ _ _ -> backend_opts'0}
 
 erasure_opts' :: Coq_config' -> Prelude.Maybe Coq_erasure_phases'
 erasure_opts' c =
   case c of {
-   Build_config' _ erasure_opts'0 _ _ _ _ -> erasure_opts'0}
+   Build_config' _ erasure_opts'0 _ _ _ _ _ -> erasure_opts'0}
 
 inlinings_opts' :: Coq_config' -> Config0.Coq_inlinings
 inlinings_opts' c =
   case c of {
-   Build_config' _ _ inlinings_opts'0 _ _ _ -> inlinings_opts'0}
+   Build_config' _ _ inlinings_opts'0 _ _ _ _ -> inlinings_opts'0}
 
-remappings_opts' :: Coq_config' -> Config0.Coq_remappings
-remappings_opts' c =
+const_remappings_opts' :: Coq_config' -> Config0.Coq_constant_remappings
+const_remappings_opts' c =
   case c of {
-   Build_config' _ _ _ remappings_opts'0 _ _ -> remappings_opts'0}
+   Build_config' _ _ _ const_remappings_opts'0 _ _ _ ->
+    const_remappings_opts'0}
+
+ind_remappings_opts' :: Coq_config' -> Config0.Coq_inductive_remappings
+ind_remappings_opts' c =
+  case c of {
+   Build_config' _ _ _ _ ind_remappings_opts'0 _ _ -> ind_remappings_opts'0}
 
 cstr_reorders_opts' :: Coq_config' -> EProgram.Coq_inductives_mapping
 cstr_reorders_opts' c =
   case c of {
-   Build_config' _ _ _ _ cstr_reorders_opts'0 _ -> cstr_reorders_opts'0}
+   Build_config' _ _ _ _ _ cstr_reorders_opts'0 _ -> cstr_reorders_opts'0}
 
 custom_attributes_opts' :: Coq_config' -> Config0.Coq_custom_attributes
 custom_attributes_opts' c =
   case c of {
-   Build_config' _ _ _ _ _ custom_attributes_opts'0 ->
+   Build_config' _ _ _ _ _ _ custom_attributes_opts'0 ->
     custom_attributes_opts'0}
 
