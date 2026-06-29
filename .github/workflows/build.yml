@@ -46,7 +46,7 @@ jobs:
           cabal build all --dry-run
 
       - name: Restore cached Haskell dependencies
-        uses: actions/cache/restore@v5
+        uses: actions/cache/restore@v6
         id: cache
         env:
           key: ${{ runner.os }}-${{ matrix.ghc }}-${{ matrix.cabal }}
@@ -60,7 +60,7 @@ jobs:
         run: cabal build all --only-dependencies
 
       - name: Save cached dependencies
-        uses: actions/cache/save@v5
+        uses: actions/cache/save@v6
         if: steps.cache.outputs.cache-hit != 'true'
         with:
           path: ${{ steps.setup.outputs.cabal-store }}
